@@ -1,103 +1,76 @@
-import Image from "next/image";
+import Link from 'next/link';
+import Image from 'next/image';
 
 export default function Home() {
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
+    <div className="min-h-screen bg-gradient-to-b from-blue-50 to-indigo-100">
+      <main className="container mx-auto px-4 py-12">
+        <h1 className="text-4xl md:text-5xl font-bold text-center text-gray-800 mb-8">
+          寶可夢 × 數碼寶貝圖鑑
+        </h1>
+        
+        <p className="text-xl text-center text-gray-600 max-w-3xl mx-auto mb-12">
+          探索兩個經典系列的生物世界：寶可夢和數碼寶貝。瀏覽完整圖鑑，查看詳細資料，發現您最喜愛的角色！
+        </p>
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+          {/* 寶可夢卡片 */}
+          <Link href="/pokemon">
+            <div className="bg-gradient-to-br from-yellow-400 to-yellow-600 rounded-xl shadow-lg hover:shadow-xl transition-shadow overflow-hidden">
+              <div className="p-6 flex flex-col items-center">
+                <h2 className="text-3xl font-bold text-white mb-4">寶可夢</h2>
+                <p className="text-yellow-100 mb-6 text-center">
+                  瀏覽所有的寶可夢，從最初的一代到最新的世代。
+                </p>
+                <div className="bg-yellow-300 bg-opacity-30 p-4 rounded-lg">
+                  <div className="relative w-40 h-40">
         <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
+                      src="/pokemon_logo.png"
+                      alt="Pokemon"
+                      fill
+                      style={{ objectFit: 'contain' }}
           priority
         />
-        <ol className="list-inside list-decimal text-sm/6 text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-[family-name:var(--font-geist-mono)] font-semibold">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
-
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
+                  </div>
+                </div>
+              </div>
+              <div className="bg-yellow-700 p-4 text-center">
+                <span className="inline-block px-4 py-2 bg-white rounded-full text-yellow-700 font-medium hover:bg-yellow-50 transition-colors">
+                  進入寶可夢圖鑑 &rarr;
+                </span>
+              </div>
+            </div>
+          </Link>
+          
+          {/* 數碼寶貝卡片 */}
+          <Link href="/digimon">
+            <div className="bg-gradient-to-br from-blue-400 to-blue-600 rounded-xl shadow-lg hover:shadow-xl transition-shadow overflow-hidden">
+              <div className="p-6 flex flex-col items-center">
+                <h2 className="text-3xl font-bold text-white mb-4">數碼寶貝</h2>
+                <p className="text-blue-100 mb-6 text-center">
+                  從初始階段到超級進化，探索數碼世界的所有生物。
+                </p>
+                <div className="bg-blue-300 bg-opacity-30 p-4 rounded-lg">
+                  <div className="relative w-40 h-40">
             <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+                      src="/digimon_logo.png"
+                      alt="Digimon"
+                      fill
+                      style={{ objectFit: 'contain' }}
+                      priority
+                    />
+                  </div>
+                </div>
+              </div>
+              <div className="bg-blue-700 p-4 text-center">
+                <span className="inline-block px-4 py-2 bg-white rounded-full text-blue-700 font-medium hover:bg-blue-50 transition-colors">
+                  進入數碼寶貝圖鑑 &rarr;
+                </span>
+              </div>
+            </div>
+          </Link>
         </div>
       </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
     </div>
   );
 }

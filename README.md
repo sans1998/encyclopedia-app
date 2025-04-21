@@ -1,36 +1,95 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 寶可夢 × 數碼寶貝圖鑑
 
-## Getting Started
+這是一個綜合的寶可夢和數碼寶貝圖鑑網絡應用程序，讓用戶能夠探索這兩個經典系列的角色和數據。
 
-First, run the development server:
+## 功能特色
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+- **綜合圖鑑**：瀏覽寶可夢和數碼寶貝的完整列表
+- **詳細資料**：查看每個角色的詳細資訊，包括類型、屬性、能力等
+- **直觀導航**：在寶可夢和數碼寶貝圖鑑之間輕鬆切換
+- **響應式設計**：適用於各種設備，從手機到桌面電腦
+- **分頁功能**：高效處理大量數據
+- **美觀界面**：現代化且用戶友好的設計
+
+## 技術棧
+
+- **前端框架**：Next.js 15
+- **CSS框架**：Tailwind CSS 4
+- **數據獲取**：使用原生Fetch API
+- **測試框架**：Jest
+- **API集成**：
+  - 寶可夢：[PokéAPI](https://pokeapi.co/)
+  - 數碼寶貝：[DigimonAPI](https://digi-api.com/)
+
+## 項目結構
+
+```
+src/
+├── app/                # 應用程序的主要目錄
+│   ├── pokemon/        # 寶可夢相關頁面
+│   ├── digimon/        # 數碼寶貝相關頁面
+│   └── page.tsx        # 主頁
+├── components/         # 可重用組件
+│   └── __tests__/      # 組件測試
+├── services/           # API服務
+└── types/              # TypeScript類型定義
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 開始使用
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+1. 安裝依賴:
+   ```bash
+   npm install
+   ```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+2. 運行開發服務器:
+```bash
+npm run dev
+```
 
-## Learn More
+3. 打開 [http://localhost:3000](http://localhost:3000) 在瀏覽器中查看應用程序。
 
-To learn more about Next.js, take a look at the following resources:
+## 測試
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+本專案使用Jest進行單元測試和集成測試：
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+1. 運行所有測試
+   ```bash
+   npm test
+   ```
 
-## Deploy on Vercel
+2. 以監視模式運行測試（在開發過程中修改代碼時自動運行測試）
+   ```bash
+   npm run test:watch
+   ```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+3. 生成測試覆蓋率報告
+   ```bash
+   npm run test:coverage
+   ```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+測試文件位於各組件對應的 `__tests__` 目錄下，你可以在開發時添加新的測試案例。
+
+## 構建和部署
+
+- **構建應用程序**:
+  ```bash
+  npm run build
+  ```
+
+- **啟動生產服務器**:
+  ```bash
+  npm start
+  ```
+
+## 合作和貢獻
+
+如果您想為此項目做出貢獻，請隨時提交問題或拉取請求。我們歡迎任何形式的合作！
+
+## 許可證
+
+本項目採用 MIT 許可證 - 詳見 LICENSE 文件。
+
+## 免責聲明
+
+此應用程序僅用於教育和娛樂目的。寶可夢和數碼寶貝及其各自的商標和圖像歸各自所有者所有。
