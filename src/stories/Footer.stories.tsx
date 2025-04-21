@@ -1,9 +1,10 @@
+import React from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
-import Header from '../components/Header';
+import Footer from '../components/Footer';
 
-const meta: Meta<typeof Header> = {
-  title: 'Layout/Header',
-  component: Header,
+const meta: Meta<typeof Footer> = {
+  title: 'Layout/Footer',
+  component: Footer,
   parameters: {
     layout: 'fullscreen',
   },
@@ -11,7 +12,7 @@ const meta: Meta<typeof Header> = {
 };
 
 export default meta;
-type Story = StoryObj<typeof Header>;
+type Story = StoryObj<typeof Footer>;
 
 export const Default: Story = {
   args: {},
@@ -19,6 +20,6 @@ export const Default: Story = {
 
 export const CustomClassName: Story = {
   args: {
-    className: 'bg-blue-600 text-white shadow-lg',
+    className: 'bg-gray-800 text-white border-gray-700',
   },
-};
+}; 
