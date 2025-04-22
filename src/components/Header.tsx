@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import { cn } from '../utils/classNames';
 import Container from './Container';
+import SearchBar from './SearchBar';
 
 interface HeaderProps {
   className?: string;
@@ -25,7 +26,7 @@ const Header: React.FC<HeaderProps> = ({ className }) => {
           </div>
 
           {/* 桌面導航 */}
-          <nav className="hidden md:block">
+          <nav className="hidden md:flex items-center space-x-6">
             <ul className="flex space-x-6">
               <li>
                 <Link href="/" className="text-gray-600 hover:text-gray-900">
@@ -43,6 +44,11 @@ const Header: React.FC<HeaderProps> = ({ className }) => {
                 </Link>
               </li>
             </ul>
+            
+            {/* 搜索欄 */}
+            <div className="ml-4 hidden lg:block">
+              <SearchBar className="w-64" placeholder="搜索..." />
+            </div>
           </nav>
 
           {/* 移動端菜單按鈕 */}
@@ -102,6 +108,11 @@ const Header: React.FC<HeaderProps> = ({ className }) => {
           >
             數碼寶貝
           </Link>
+          
+          {/* 移動端搜索欄 */}
+          <div className="px-3 py-2">
+            <SearchBar placeholder="搜索寶可夢或數碼寶貝..." />
+          </div>
         </div>
       </div>
     </header>

@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import Image from 'next/image';
+import SearchBar from '../components/SearchBar';
 
 export default function Home() {
   return (
@@ -9,9 +10,14 @@ export default function Home() {
           寶可夢 × 數碼寶貝圖鑑
         </h1>
         
-        <p className="text-xl text-center text-gray-600 max-w-3xl mx-auto mb-12">
+        <p className="text-xl text-center text-gray-600 max-w-3xl mx-auto mb-8">
           探索兩個經典系列的生物世界：寶可夢和數碼寶貝。瀏覽完整圖鑑，查看詳細資料，發現您最喜愛的角色！
         </p>
+        
+        {/* 搜索欄 */}
+        <div className="max-w-2xl mx-auto mb-12">
+          <SearchBar placeholder="搜索寶可夢或數碼寶貝..." />
+        </div>
         
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
           {/* 寶可夢卡片 */}
