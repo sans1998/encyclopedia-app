@@ -65,14 +65,14 @@ const Pagination: React.FC<PaginationProps> = ({
   );
 
   return (
-    <div className={cn('flex items-center justify-center space-x-2', className)}>
+    <div className={cn('flex items-center justify-center space-x-2 mt-12 mb-16', className)}>
       {/* 上一頁按鈕 */}
       <button
         className={navButtonClass}
         onClick={() => onPageChange(currentPage - 1)}
         disabled={currentPage <= 1 || disabled}
       >
-        上一頁
+        {"<"}
       </button>
 
       {/* 第一頁（如果不在顯示範圍內） */}
@@ -123,7 +123,7 @@ const Pagination: React.FC<PaginationProps> = ({
         onClick={() => onPageChange(currentPage + 1)}
         disabled={currentPage >= totalPages || disabled}
       >
-        下一頁
+        {">"}
       </button>
     </div>
   );
