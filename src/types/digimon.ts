@@ -31,6 +31,14 @@ export interface DigimonDescription {
   description: string;
 }
 
+// API返回的簡單數碼寶貝列表項
+export interface DigimonListItem {
+  id: number;
+  name: string;
+  href: string;
+  image: string;
+}
+
 // 原始數碼寶貝數據結構
 export interface RawDigimonData {
   id: number;
@@ -70,9 +78,17 @@ export interface Digimon {
   skills?: { name: string; description: string; }[];
 }
 
+// 簡化版數碼寶貝，用於列表顯示
+export interface SimpleDigimon {
+  id: number;
+  name: string;
+  image: string;
+  href: string;
+}
+
 // 數碼寶貝列表響應
 export interface DigimonListResponse {
-  content: Digimon[];
+  content: Array<Digimon | SimpleDigimon>;
   pageable: {
     currentPage: number;
     elementsOnPage: number;
