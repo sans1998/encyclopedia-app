@@ -2,12 +2,14 @@
 
 import { useState, useEffect } from 'react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import Link from 'next/link';
 import Header from '@/components/Header';
 import CreatureCard from '@/components/CreatureCard';
 import Pagination from '@/components/Pagination';
 import Loading from '@/components/Loading';
 import { getPokemonList, getPokemonDetail } from '@/services/pokemonService';
 import { Pokemon } from '@/types';
+import Footer from '@/components/Footer';
 
 export default function PokemonPage() {
   const router = useRouter();
@@ -49,8 +51,10 @@ export default function PokemonPage() {
           pokemon => getPokemonDetail(pokemon.name)
         );
         
-        const detailedPokemon = await Promise.all(detailedPokemonPromises);
-        setPokemonList(detailedPokemon);
+        const detailedPokemonResults = await Promise.all(detailedPokemonPromises);
+        // 過濾掉null值
+        const validPokemon = detailedPokemonResults.filter((pokemon): pokemon is Pokemon => pokemon !== null);
+        setPokemonList(validPokemon);
       } catch (err) {
         console.error('獲取寶可夢數據時出錯:', err);
         setError('無法加載寶可夢數據。請稍後再試。');
@@ -61,6 +65,35 @@ export default function PokemonPage() {
     
     fetchPokemon();
   }, [currentPage]);
+
+  // 根據寶可夢類型獲取背景顏色
+  const getTypeBackgroundColor = (types: string[]) => {
+    if (!types || types.length === 0) return '';
+    
+    const primaryType = types[0].toLowerCase();
+    const typeColors: Record<string, string> = {
+      normal: 'from-gray-200 to-gray-300',
+      fire: 'from-red-200 to-orange-300',
+      water: 'from-blue-200 to-blue-300',
+      electric: 'from-yellow-100 to-yellow-300',
+      grass: 'from-green-200 to-green-300',
+      ice: 'from-blue-100 to-cyan-200',
+      fighting: 'from-red-300 to-red-400',
+      poison: 'from-purple-200 to-purple-300',
+      ground: 'from-yellow-200 to-yellow-400',
+      flying: 'from-indigo-100 to-blue-200',
+      psychic: 'from-pink-200 to-pink-300',
+      bug: 'from-lime-200 to-green-200',
+      rock: 'from-yellow-300 to-yellow-500',
+      ghost: 'from-purple-300 to-indigo-400',
+      dragon: 'from-indigo-300 to-blue-400',
+      dark: 'from-gray-600 to-gray-700',
+      steel: 'from-gray-300 to-gray-400',
+      fairy: 'from-pink-100 to-pink-200'
+    };
+    
+    return typeColors[primaryType] || '';
+  };
   
   return (
     <div className="min-h-screen bg-gradient-to-b from-yellow-50 to-yellow-100">
@@ -86,13 +119,27 @@ export default function PokemonPage() {
         ) : (
           <>
             <div className="grid sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 md:gap-6">
-              {pokemonList.map(pokemon => (
-                <CreatureCard 
-                  key={pokemon.id} 
-                  data={pokemon}
-                  type="pokemon"
-                />
-              ))}
+              {pokemonList.map(pokemon => {
+                const types = pokemon.types.map(t => t.type.name);
+                const typeBackground = getTypeBackgroundColor(types);
+                
+                return (
+                  <Link 
+                    key={pokemon.id} 
+                    href={`/pokemon/${pokemon.id}`}
+                    className="block transform transition hover:scale-105"
+                  >
+                    <CreatureCard 
+                      name={pokemon.name}
+                      image={pokemon.sprites.front_default || ''}
+                      types={types}
+                      id={pokemon.id}
+                      category="寶可夢"
+                      className={`bg-gradient-to-br ${typeBackground}`}
+                    />
+                  </Link>
+                );
+              })}
             </div>
             
             <Pagination 
@@ -103,6 +150,8 @@ export default function PokemonPage() {
           </>
         )}
       </main>
+      
+      <Footer />
     </div>
   );
 } 

@@ -1,5 +1,6 @@
 import Image from 'next/image';
 import { cn } from '../utils/classNames';
+import { pokemonTypeColorMap, digimonTypeColorMap, digimonLevelColorMap } from '../utils/constants';
 
 interface CreatureCardProps {
   name: string;
@@ -8,6 +9,7 @@ interface CreatureCardProps {
   id?: string | number;
   category?: string;
   className?: string;
+  typeColorMap?: 'pokemon' | 'digimon';
 }
 
 export default function CreatureCard({ 
@@ -16,35 +18,33 @@ export default function CreatureCard({
   types, 
   id, 
   category,
-  className 
+  className,
+  typeColorMap = 'pokemon'
 }: CreatureCardProps) {
-  // 處理類型的顏色映射
-  const typeColorMap: Record<string, string> = {
+  // 根據傳入的參數選擇合適的顏色映射
+  const getColorClass = (type: string) => {
+    if (!type) return 'bg-gray-300';
+    
+    const lowerType = type.toLowerCase();
+    
+    if (typeColorMap === 'digimon') {
+      // 檢查是否是屬性
+      if (['vaccine', 'virus', 'data', 'free', 'unknown'].includes(lowerType)) {
+        return digimonTypeColorMap[lowerType] || 'bg-gray-300';
+      }
+      
+      // 檢查是否是等級
+      if (['rookie', 'champion', 'ultimate', 'mega', 'armor', 'training', 
+          'in-training', 'fresh', 'ultra', 'hybrid'].includes(lowerType)) {
+        return digimonLevelColorMap[lowerType] || 'bg-gray-300';
+      }
+      
+      // 如果不是已知的屬性或等級，使用灰色
+      return 'bg-gray-300';
+    }
+    
     // 寶可夢類型顏色
-    normal: 'bg-gray-400',
-    fire: 'bg-red-500',
-    water: 'bg-blue-500',
-    electric: 'bg-yellow-400',
-    grass: 'bg-green-500',
-    ice: 'bg-blue-200',
-    fighting: 'bg-red-700',
-    poison: 'bg-purple-500',
-    ground: 'bg-yellow-600',
-    flying: 'bg-indigo-300',
-    psychic: 'bg-pink-500',
-    bug: 'bg-green-400',
-    rock: 'bg-yellow-700',
-    ghost: 'bg-purple-700',
-    dragon: 'bg-indigo-700',
-    dark: 'bg-gray-700',
-    steel: 'bg-gray-500',
-    fairy: 'bg-pink-300',
-    // 數碼寶貝類型顏色
-    free: 'bg-green-300',
-    vaccine: 'bg-blue-300',
-    virus: 'bg-red-300',
-    data: 'bg-purple-300',
-    unknown: 'bg-gray-300',
+    return pokemonTypeColorMap[lowerType] || 'bg-gray-300';
   };
   
   return (
@@ -77,7 +77,7 @@ export default function CreatureCard({
         {types && types.length > 0 ? types.map((type, index) => (
           <span 
             key={index}
-            className={cn("px-2 py-1 rounded-full text-xs font-medium", typeColorMap[type?.toLowerCase?.() || ''] || 'bg-gray-300', "text-white")}
+            className={cn("px-2 py-1 rounded-full text-xs font-medium", getColorClass(type), "text-white")}
           >
             {type}
           </span>
