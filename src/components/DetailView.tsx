@@ -1,6 +1,7 @@
 import React from 'react';
 import { cn } from '../utils/classNames';
 import Card from './Card';
+import Image from 'next/image';
 
 interface Stat {
   name: string;
@@ -33,11 +34,12 @@ const DetailView: React.FC<DetailViewProps> = ({
         {/* 圖片和基本信息區域 */}
         <div className="flex flex-col items-center p-6 bg-gray-50">
           <div className="w-full max-w-sm aspect-square flex items-center justify-center mb-4">
-            <img
+            <Image
               src={image}
               alt={name}
-              className="max-w-full max-h-full object-contain"
-              loading="lazy"
+              width={200}
+              height={200}
+              className="w-full h-auto"
             />
           </div>
           <h1 className="text-2xl font-bold mb-2">{name}</h1>
