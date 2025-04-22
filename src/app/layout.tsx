@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import { EncyclopediaProvider } from "@/contexts/EncyclopediaContext";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -27,17 +28,9 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen`}
       >
-        {children}
-        
-        {/* 頁腳 */}
-        <footer className="py-6 bg-gray-800 text-gray-300">
-          <div className="container mx-auto px-4 text-center text-sm">
-            <p>寶可夢 × 數碼寶貝圖鑑 &copy; {new Date().getFullYear()}</p>
-            <p className="mt-2">
-              本網站僅供教育和娛樂目的使用。寶可夢與數碼寶貝及其各自商標和圖像的所有權歸各自所有者所有。
-            </p>
-          </div>
-        </footer>
+        <EncyclopediaProvider>
+          {children}
+        </EncyclopediaProvider>
       </body>
     </html>
   );
