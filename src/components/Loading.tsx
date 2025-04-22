@@ -1,21 +1,58 @@
-export default function Loading() {
-  return (
-    <div className="flex justify-center items-center min-h-[300px]">
-      <div className="relative w-20 h-20">
-        {/* 旋轉的精靈球 */}
-        <div className="absolute inset-0 border-t-4 border-blue-500 border-solid rounded-full animate-spin"></div>
-        <div className="absolute inset-0 flex items-center justify-center">
-          <span className="bg-white w-4 h-4 rounded-full"></span>
-        </div>
-        
-        {/* 上半部分紅色，下半部分白色的精靈球效果 */}
-        <div className="absolute inset-0 flex flex-col overflow-hidden rounded-full border-2 border-gray-300">
-          <div className="bg-red-500 h-1/2"></div>
-          <div className="bg-white h-1/2"></div>
-        </div>
+import React from 'react';
+import { cn } from '../utils/classNames';
+
+interface LoadingProps {
+  className?: string;
+  size?: 'small' | 'medium' | 'large';
+  variant?: 'primary' | 'secondary';
+  fullPage?: boolean;
+  text?: string;
+}
+
+const Loading: React.FC<LoadingProps> = ({
+  className,
+  size = 'medium',
+  variant = 'primary',
+  fullPage = false,
+  text,
+}) => {
+  const sizeClasses = {
+    small: 'w-4 h-4 border-2',
+    medium: 'w-8 h-8 border-3',
+    large: 'w-12 h-12 border-4',
+  };
+
+  const variantClasses = {
+    primary: 'border-blue-500 border-b-transparent',
+    secondary: 'border-gray-300 border-b-transparent',
+  };
+
+  const spinner = (
+    <div
+      className={cn(
+        'animate-spin rounded-full',
+        sizeClasses[size],
+        variantClasses[variant],
+        className
+      )}
+    />
+  );
+
+  if (fullPage) {
+    return (
+      <div className="fixed inset-0 flex flex-col items-center justify-center bg-white bg-opacity-80 z-50">
+        {spinner}
+        {text && <p className="mt-4 text-gray-600">{text}</p>}
       </div>
-      
-      <div className="ml-4 text-lg font-medium">載入中...</div>
+    );
+  }
+
+  return (
+    <div className="flex flex-col items-center justify-center p-4">
+      {spinner}
+      {text && <p className="mt-2 text-gray-600 text-sm">{text}</p>}
     </div>
   );
-} 
+};
+
+export default Loading; 

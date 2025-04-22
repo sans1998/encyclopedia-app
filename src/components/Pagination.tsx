@@ -1,125 +1,132 @@
+import React from 'react';
 import { cn } from '../utils/classNames';
 
 interface PaginationProps {
+  className?: string;
   currentPage: number;
   totalPages: number;
   onPageChange: (page: number) => void;
+  disabled?: boolean;
 }
 
-export default function Pagination({ currentPage, totalPages, onPageChange }: PaginationProps) {
+const Pagination: React.FC<PaginationProps> = ({
+  className,
+  currentPage,
+  totalPages,
+  onPageChange,
+  disabled = false,
+}) => {
   // 計算要顯示的頁碼範圍
   const getPageNumbers = () => {
-    const range = [];
-    const displayCount = 5; // 總共顯示的頁碼數量
-    const sideCount = Math.floor(displayCount / 2); // 當前頁左右各顯示多少頁
-    
-    let start = Math.max(currentPage - sideCount, 1);
-    const end = Math.min(start + displayCount - 1, totalPages);
-    
-    if (end - start + 1 < displayCount) {
-      start = Math.max(end - displayCount + 1, 1);
+    // 始終顯示當前頁碼和其前後兩頁
+    const range = 2;
+    const pages = [];
+
+    // 起始頁碼
+    let start = Math.max(1, currentPage - range);
+    // 結束頁碼
+    let end = Math.min(totalPages, currentPage + range);
+
+    // 調整起始頁碼，保證顯示足夠的頁碼
+    if (currentPage - range < 1) {
+      end = Math.min(totalPages, end + (1 - (currentPage - range)));
     }
-    
+
+    // 調整結束頁碼，保證顯示足夠的頁碼
+    if (currentPage + range > totalPages) {
+      start = Math.max(1, start - ((currentPage + range) - totalPages));
+    }
+
+    // 添加頁碼
     for (let i = start; i <= end; i++) {
-      range.push(i);
+      pages.push(i);
     }
-    
-    return range;
+
+    return pages;
   };
-  
+
   const pageNumbers = getPageNumbers();
-  
-  if (totalPages <= 1) return null;
-  
+
+  // 頁碼按鈕樣式
+  const pageButtonClass = (page: number) => cn(
+    'inline-flex items-center justify-center w-9 h-9 rounded-md text-sm',
+    'transition-colors duration-200',
+    page === currentPage ? 'bg-blue-500 text-white hover:bg-blue-600' : '',
+    page !== currentPage && !disabled ? 'bg-white text-gray-700 hover:bg-gray-100' : '',
+    disabled ? 'opacity-50 cursor-not-allowed' : ''
+  );
+
+  // 上一頁/下一頁按鈕樣式
+  const navButtonClass = cn(
+    'inline-flex items-center justify-center px-3 h-9 rounded-md text-sm',
+    'transition-colors duration-200',
+    !disabled ? 'bg-white text-gray-700 hover:bg-gray-100' : '',
+    disabled ? 'opacity-50 cursor-not-allowed' : ''
+  );
+
   return (
-    <div className="flex justify-center my-8">
-      <div className="flex items-center gap-1">
-        {/* 上一頁按鈕 */}
-        <button
-          onClick={() => onPageChange(currentPage - 1)}
-          disabled={currentPage === 1}
-          className={cn(
-            "p-2 rounded-md",
-            currentPage === 1
-              ? 'text-gray-400 cursor-not-allowed'
-              : 'text-gray-700 hover:bg-gray-200'
-          )}
-          aria-label="上一頁"
-        >
-          &laquo;
-        </button>
-        
-        {/* 第一頁 */}
-        {pageNumbers[0] > 1 && (
-          <>
-            <button
-              onClick={() => onPageChange(1)}
-              className={cn(
-                "p-2 rounded-md hover:bg-gray-200",
-                currentPage === 1 ? 'bg-blue-500 text-white' : 'text-gray-700'
-              )}
-            >
-              1
-            </button>
-            
-            {/* 省略號 */}
-            {pageNumbers[0] > 2 && (
-              <span className="p-1 text-gray-500">...</span>
-            )}
-          </>
-        )}
-        
-        {/* 頁碼 */}
-        {pageNumbers.map(number => (
+    <div className={cn('flex items-center justify-center space-x-2', className)}>
+      {/* 上一頁按鈕 */}
+      <button
+        className={navButtonClass}
+        onClick={() => onPageChange(currentPage - 1)}
+        disabled={currentPage <= 1 || disabled}
+      >
+        上一頁
+      </button>
+
+      {/* 第一頁（如果不在顯示範圍內） */}
+      {pageNumbers[0] > 1 && (
+        <>
           <button
-            key={number}
-            onClick={() => onPageChange(number)}
-            className={cn(
-              "p-2 rounded-md",
-              currentPage === number
-                ? 'bg-blue-500 text-white'
-                : 'text-gray-700 hover:bg-gray-200'
-            )}
+            className={pageButtonClass(1)}
+            onClick={() => onPageChange(1)}
+            disabled={disabled}
           >
-            {number}
+            1
           </button>
-        ))}
-        
-        {/* 最後一頁 */}
-        {pageNumbers[pageNumbers.length - 1] < totalPages && (
-          <>
-            {/* 省略號 */}
-            {pageNumbers[pageNumbers.length - 1] < totalPages - 1 && (
-              <span className="p-1 text-gray-500">...</span>
-            )}
-            
-            <button
-              onClick={() => onPageChange(totalPages)}
-              className={cn(
-                "p-2 rounded-md hover:bg-gray-200",
-                currentPage === totalPages ? 'bg-blue-500 text-white' : 'text-gray-700'
-              )}
-            >
-              {totalPages}
-            </button>
-          </>
-        )}
-        
-        {/* 下一頁按鈕 */}
+          {pageNumbers[0] > 2 && <span className="text-gray-500">...</span>}
+        </>
+      )}
+
+      {/* 頁碼按鈕 */}
+      {pageNumbers.map(page => (
         <button
-          onClick={() => onPageChange(currentPage + 1)}
-          disabled={currentPage === totalPages}
-          className={cn(
-            "p-2 rounded-md",
-            currentPage === totalPages
-              ? 'text-gray-400 cursor-not-allowed'
-              : 'text-gray-700 hover:bg-gray-200'
-          )}
-          aria-label="下一頁"
+          key={page}
+          className={pageButtonClass(page)}
+          onClick={() => onPageChange(page)}
+          disabled={disabled}
         >
-          &raquo;
+          {page}
         </button>
-      </div>
+      ))}
+
+      {/* 最後一頁（如果不在顯示範圍內） */}
+      {pageNumbers[pageNumbers.length - 1] < totalPages && (
+        <>
+          {pageNumbers[pageNumbers.length - 1] < totalPages - 1 && (
+            <span className="text-gray-500">...</span>
+          )}
+          <button
+            className={pageButtonClass(totalPages)}
+            onClick={() => onPageChange(totalPages)}
+            disabled={disabled}
+          >
+            {totalPages}
+          </button>
+        </>
+      )}
+
+      {/* 下一頁按鈕 */}
+      <button
+        className={navButtonClass}
+        onClick={() => onPageChange(currentPage + 1)}
+        disabled={currentPage >= totalPages || disabled}
+      >
+        下一頁
+      </button>
     </div>
   );
-} 
+};
+
+export default Pagination; 
