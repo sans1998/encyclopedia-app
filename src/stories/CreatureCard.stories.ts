@@ -1,6 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import CreatureCard from '../components/CreatureCard';
-import { Pokemon, Digimon } from '../types';
 
 const meta = {
   title: 'App/CreatureCard',
@@ -16,63 +15,50 @@ type Story = StoryObj<typeof meta>;
 
 export const PokemonCard: Story = {
   args: {
-    type: 'pokemon',
-    data: {
-      id: 25,
-      name: 'pikachu',
-      sprites: {
-        front_default: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/25.png',
-        other: {
-          'official-artwork': {
-            front_default: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/25.png'
-          }
-        }
-      },
-      types: [
-        { type: { name: 'electric' } }
-      ],
-      height: 4,
-      weight: 60,
-      abilities: [{ ability: { name: 'static' } }],
-      stats: [{ base_stat: 55, stat: { name: 'speed' } }]
-    } as Pokemon
+    name: 'Pikachu',
+    image: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/25.png',
+    types: ['electric'],
+    id: 25,
+    category: '寶可夢',
   },
 };
 
 export const DigimonCard: Story = {
   args: {
-    type: 'digimon',
-    data: {
-      id: 1,
-      name: 'Agumon',
-      images: [
-        { href: 'https://digimon.shadowsmith.com/img/agumon.jpg' }
-      ],
-      types: [
-        { id: 1, type: 'vaccine' }
-      ],
-      levels: [{ id: 1, level: 'rookie' }],
-      attributes: [{ id: 1, attribute: 'vaccine' }],
-      fields: [{ id: 1, field: 'nature spirits', image: '' }],
-      descriptions: [{ language: 'en', description: 'A reptile Digimon with tough skin' }]
-    } as Digimon
+    name: 'Agumon',
+    image: 'https://digimon.shadowsmith.com/img/agumon.jpg',
+    types: ['vaccine', 'reptile'],
+    id: 1,
+    category: '數碼寶貝',
   },
 };
 
-export const NoImageCard: Story = {
+export const MultipleTypes: Story = {
   args: {
-    type: 'pokemon',
-    data: {
-      id: 999,
-      name: '未知精靈',
-      sprites: {
-        front_default: ''
-      },
-      types: [],
-      height: 0,
-      weight: 0,
-      abilities: [],
-      stats: []
-    } as Pokemon
+    name: 'Charizard',
+    image: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/6.png',
+    types: ['fire', 'flying'],
+    id: 6,
+    category: '寶可夢',
+  },
+};
+
+export const LongName: Story = {
+  args: {
+    name: 'Corphish with a very long name that should wrap',
+    image: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/341.png',
+    types: ['water'],
+    id: 341,
+    category: '寶可夢',
+  },
+};
+
+export const NoImage: Story = {
+  args: {
+    name: '未知精靈',
+    image: '',
+    types: ['unknown'],
+    id: 999,
+    category: '未分類',
   },
 }; 
