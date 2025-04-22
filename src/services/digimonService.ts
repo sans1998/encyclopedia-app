@@ -49,7 +49,11 @@ function normalizeDigimonData(data: RawDigimonData): Digimon {
 }
 
 // 擴展的SimpleDigimon類型，包含基本屬性和等級信息
-export interface EnhancedDigimonListItem extends SimpleDigimon {
+export interface EnhancedDigimonListItem {
+  id: number;
+  name: string;
+  image: string;
+  href: string;
   primaryAttribute?: string;
   primaryLevel?: string;
 }
