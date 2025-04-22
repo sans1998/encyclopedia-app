@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import Header from '@/components/Header';
@@ -11,7 +11,8 @@ import { getEnhancedDigimonList, EnhancedDigimonListItem } from '@/services/digi
 import { Digimon, SimpleDigimon } from '@/types';
 import Footer from '@/components/Footer';
 
-export default function DigimonPage() {
+// 分離出使用 useSearchParams 的組件
+function DigimonList() {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -21,7 +22,7 @@ export default function DigimonPage() {
   
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [digimonList, setDigimonList] = useState<(Digimon | SimpleDigimon | EnhancedDigimonListItem)[]>([]);
+  const [digimonList, setDigimonList] = useState<EnhancedDigimonListItem[]>([]);
   const [totalPages, setTotalPages] = useState(1);
   
   // 處理頁面變更
@@ -126,7 +127,62 @@ export default function DigimonPage() {
     
     return tags;
   };
-  
+
+  return (
+    <>
+      {loading ? (
+        <Loading />
+      ) : error ? (
+        <div className="text-center text-red-500 p-8 bg-red-50 rounded-lg">
+          <p>{error}</p>
+          <button 
+            onClick={() => handlePageChange(currentPage)} 
+            className="mt-4 px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600"
+          >
+            重試
+          </button>
+        </div>
+      ) : (
+        <>
+          <div className="grid sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 md:gap-6">
+            {digimonList.map(digimon => {
+              const backgroundGradient = getAttributeBackgroundColor(digimon);
+              const imageUrl = getImageUrl(digimon);
+              const types = getDigimonTags(digimon);
+              
+              return (
+                <Link 
+                  key={digimon.id} 
+                  href={`/digimon/${digimon.id}`}
+                  className="block transform transition hover:scale-105"
+                >
+                  <CreatureCard 
+                    name={digimon.name}
+                    image={imageUrl}
+                    types={types}
+                    id={digimon.id}
+                    category="數碼寶貝"
+                    className={`bg-gradient-to-br ${backgroundGradient}`}
+                    typeColorMap="digimon"
+                  />
+                </Link>
+              );
+            })}
+          </div>
+          
+          <Pagination 
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={handlePageChange}
+          />
+        </>
+      )}
+    </>
+  );
+}
+
+// 主頁面組件
+export default function DigimonPage() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-blue-50 to-blue-100">
       <Header />
@@ -136,53 +192,9 @@ export default function DigimonPage() {
           數碼寶貝圖鑑
         </h1>
         
-        {loading ? (
-          <Loading />
-        ) : error ? (
-          <div className="text-center text-red-500 p-8 bg-red-50 rounded-lg">
-            <p>{error}</p>
-            <button 
-              onClick={() => handlePageChange(currentPage)} 
-              className="mt-4 px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600"
-            >
-              重試
-            </button>
-          </div>
-        ) : (
-          <>
-            <div className="grid sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 md:gap-6">
-              {digimonList.map(digimon => {
-                const backgroundGradient = getAttributeBackgroundColor(digimon);
-                const imageUrl = getImageUrl(digimon);
-                const types = getDigimonTags(digimon);
-                
-                return (
-                  <Link 
-                    key={digimon.id} 
-                    href={`/digimon/${digimon.id}`}
-                    className="block transform transition hover:scale-105"
-                  >
-                    <CreatureCard 
-                      name={digimon.name}
-                      image={imageUrl}
-                      types={types}
-                      id={digimon.id}
-                      category="數碼寶貝"
-                      className={`bg-gradient-to-br ${backgroundGradient}`}
-                      typeColorMap="digimon"
-                    />
-                  </Link>
-                );
-              })}
-            </div>
-            
-            <Pagination 
-              currentPage={currentPage}
-              totalPages={totalPages}
-              onPageChange={handlePageChange}
-            />
-          </>
-        )}
+        <Suspense fallback={<Loading />}>
+          <DigimonList />
+        </Suspense>
       </main>
       
       <Footer />

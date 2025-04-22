@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import Header from '@/components/Header';
@@ -8,10 +8,11 @@ import CreatureCard from '@/components/CreatureCard';
 import Pagination from '@/components/Pagination';
 import Loading from '@/components/Loading';
 import { getPokemonList, getPokemonDetail } from '@/services/pokemonService';
-import { Pokemon } from '@/types';
+import type { Pokemon } from '@/types/pokemon';
 import Footer from '@/components/Footer';
 
-export default function PokemonPage() {
+// 分離出使用 useSearchParams 的組件
+function PokemonList() {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -48,12 +49,12 @@ export default function PokemonPage() {
         
         // 獲取每個寶可夢的詳細信息
         const detailedPokemonPromises = listResponse.results.map(
-          pokemon => getPokemonDetail(pokemon.name)
+          (pokemon: { name: string }) => getPokemonDetail(pokemon.name)
         );
         
         const detailedPokemonResults = await Promise.all(detailedPokemonPromises);
         // 過濾掉null值
-        const validPokemon = detailedPokemonResults.filter((pokemon): pokemon is Pokemon => pokemon !== null);
+        const validPokemon = detailedPokemonResults.filter((pokemon: Pokemon | null): pokemon is Pokemon => pokemon !== null);
         setPokemonList(validPokemon);
       } catch (err) {
         console.error('獲取寶可夢數據時出錯:', err);
@@ -94,7 +95,60 @@ export default function PokemonPage() {
     
     return typeColors[primaryType] || '';
   };
-  
+
+  return (
+    <>
+      {loading ? (
+        <Loading />
+      ) : error ? (
+        <div className="text-center text-red-500 p-8 bg-red-50 rounded-lg">
+          <p>{error}</p>
+          <button 
+            onClick={() => handlePageChange(currentPage)} 
+            className="mt-4 px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600"
+          >
+            重試
+          </button>
+        </div>
+      ) : (
+        <>
+          <div className="grid sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 md:gap-6">
+            {pokemonList.map((pokemon: Pokemon) => {
+              const types = pokemon.types.map((t: { type: { name: string } }) => t.type.name);
+              const typeBackground = getTypeBackgroundColor(types);
+              
+              return (
+                <Link 
+                  key={pokemon.id} 
+                  href={`/pokemon/${pokemon.id}`}
+                  className="block transform transition hover:scale-105"
+                >
+                  <CreatureCard 
+                    name={pokemon.name}
+                    image={pokemon.sprites.front_default || ''}
+                    types={types}
+                    id={pokemon.id}
+                    category="寶可夢"
+                    className={`bg-gradient-to-br ${typeBackground}`}
+                  />
+                </Link>
+              );
+            })}
+          </div>
+          
+          <Pagination 
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={handlePageChange}
+          />
+        </>
+      )}
+    </>
+  );
+}
+
+// 主頁面組件
+export default function PokemonPage() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-yellow-50 to-yellow-100">
       <Header />
@@ -104,51 +158,9 @@ export default function PokemonPage() {
           寶可夢圖鑑
         </h1>
         
-        {loading ? (
-          <Loading />
-        ) : error ? (
-          <div className="text-center text-red-500 p-8 bg-red-50 rounded-lg">
-            <p>{error}</p>
-            <button 
-              onClick={() => handlePageChange(currentPage)} 
-              className="mt-4 px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600"
-            >
-              重試
-            </button>
-          </div>
-        ) : (
-          <>
-            <div className="grid sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 md:gap-6">
-              {pokemonList.map(pokemon => {
-                const types = pokemon.types.map(t => t.type.name);
-                const typeBackground = getTypeBackgroundColor(types);
-                
-                return (
-                  <Link 
-                    key={pokemon.id} 
-                    href={`/pokemon/${pokemon.id}`}
-                    className="block transform transition hover:scale-105"
-                  >
-                    <CreatureCard 
-                      name={pokemon.name}
-                      image={pokemon.sprites.front_default || ''}
-                      types={types}
-                      id={pokemon.id}
-                      category="寶可夢"
-                      className={`bg-gradient-to-br ${typeBackground}`}
-                    />
-                  </Link>
-                );
-              })}
-            </div>
-            
-            <Pagination 
-              currentPage={currentPage}
-              totalPages={totalPages}
-              onPageChange={handlePageChange}
-            />
-          </>
-        )}
+        <Suspense fallback={<Loading />}>
+          <PokemonList />
+        </Suspense>
       </main>
       
       <Footer />

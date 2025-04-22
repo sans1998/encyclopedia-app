@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import Header from '@/components/Header';
@@ -19,7 +19,8 @@ interface SearchResult {
   category: 'pokemon' | 'digimon';
 }
 
-const SearchPage = () => {
+// 分離出使用 useSearchParams 的組件
+function SearchResults() {
   const searchParams = useSearchParams();
   const query = searchParams.get('q') || '';
   const [results, setResults] = useState<SearchResult[]>([]);
@@ -46,14 +47,14 @@ const SearchPage = () => {
             id: p.id.toString(),
             name: p.name,
             image: p.sprites.front_default,
-            types: p.types.map(t => t.type.name),
+            types: p.types.map((t: { type: { name: string } }) => t.type.name),
             category: 'pokemon' as const
           })),
           ...digimonResults.map(d => ({
             id: d.id.toString(),
             name: d.name,
             image: d.images[0]?.href || '',
-            types: d.levels.map(l => l.level),
+            types: d.levels.map((l: { level: string }) => l.level),
             category: 'digimon' as const
           }))
         ];
@@ -110,83 +111,94 @@ const SearchPage = () => {
     
     return 'from-gray-100 to-gray-200';
   };
-  
+
+  return (
+    <>
+      <h1 className="text-3xl font-bold mb-6">搜索結果: {query}</h1>
+      
+      {/* 搜索欄 */}
+      <div className="mb-8">
+        <SearchBar initialValue={query} />
+      </div>
+      
+      {loading ? (
+        <Loading text="搜索中..." />
+      ) : (
+        <>
+          {results.length === 0 ? (
+            <div className="text-center py-12">
+              <p className="text-xl text-gray-600 mb-4">
+                沒有找到與 &quot;{query}&quot; 相關的結果
+              </p>
+              <p className="text-gray-500">
+                請嘗試其他關鍵詞或查看我們的
+                <Link href="/pokemon" className="text-blue-500 hover:underline mx-1">
+                  寶可夢
+                </Link>
+                或
+                <Link href="/digimon" className="text-blue-500 hover:underline mx-1">
+                  數碼寶貝
+                </Link>
+                完整目錄
+              </p>
+            </div>
+          ) : (
+            <>
+              <p className="mb-4">
+                找到 {results.length} 個結果
+              </p>
+              
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                {paginatedResults.map((item) => {
+                  const backgroundGradient = getBackgroundColor(item);
+                  
+                  return (
+                    <Link 
+                      key={`${item.category}-${item.id}`}
+                      href={`/${item.category}/${item.id}`}
+                      className="block transform transition hover:scale-105"
+                    >
+                      <CreatureCard
+                        name={item.name}
+                        image={item.image}
+                        types={item.types}
+                        id={item.id}
+                        category={item.category === 'pokemon' ? '寶可夢' : '數碼寶貝'}
+                        className={`bg-gradient-to-br ${backgroundGradient}`}
+                      />
+                    </Link>
+                  );
+                })}
+              </div>
+              
+              {/* 分頁 */}
+              {results.length > resultsPerPage && (
+                <div className="mt-8">
+                  <Pagination
+                    currentPage={currentPage}
+                    totalPages={Math.ceil(results.length / resultsPerPage)}
+                    onPageChange={setCurrentPage}
+                  />
+                </div>
+              )}
+            </>
+          )}
+        </>
+      )}
+    </>
+  );
+}
+
+// 主頁面組件
+const SearchPage = () => {
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100">
       <Header />
       
       <main className="container mx-auto px-4 py-8">
-        <h1 className="text-3xl font-bold mb-6">搜索結果: {query}</h1>
-        
-        {/* 搜索欄 */}
-        <div className="mb-8">
-          <SearchBar initialValue={query} />
-        </div>
-        
-        {loading ? (
-          <Loading text="搜索中..." />
-        ) : (
-          <>
-            {results.length === 0 ? (
-              <div className="text-center py-12">
-                <p className="text-xl text-gray-600 mb-4">
-                  沒有找到與 &quot;{query}&quot; 相關的結果
-                </p>
-                <p className="text-gray-500">
-                  請嘗試其他關鍵詞或查看我們的
-                  <Link href="/pokemon" className="text-blue-500 hover:underline mx-1">
-                    寶可夢
-                  </Link>
-                  或
-                  <Link href="/digimon" className="text-blue-500 hover:underline mx-1">
-                    數碼寶貝
-                  </Link>
-                  完整目錄
-                </p>
-              </div>
-            ) : (
-              <>
-                <p className="mb-4">
-                  找到 {results.length} 個結果
-                </p>
-                
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-                  {paginatedResults.map((item) => {
-                    const backgroundGradient = getBackgroundColor(item);
-                    
-                    return (
-                      <Link 
-                        key={`${item.category}-${item.id}`}
-                        href={`/${item.category}/${item.id}`}
-                        className="block transform transition hover:scale-105"
-                      >
-                        <CreatureCard
-                          name={item.name}
-                          image={item.image}
-                          types={item.types}
-                          id={item.id}
-                          category={item.category === 'pokemon' ? '寶可夢' : '數碼寶貝'}
-                          className={`bg-gradient-to-br ${backgroundGradient}`}
-                        />
-                      </Link>
-                    );
-                  })}
-                </div>
-                
-                {/* 分頁 */}
-                {results.length > resultsPerPage && (
-                  <div className="mt-8">
-                    <Pagination
-                      currentPage={currentPage}
-                      totalPages={Math.ceil(results.length / resultsPerPage)}
-                      onPageChange={setCurrentPage}
-                    />
-                  </div>
-                )}
-              </>
-            )}
-          </>
-        )}
+        <Suspense fallback={<Loading text="載入中..." />}>
+          <SearchResults />
+        </Suspense>
       </main>
     </div>
   );
