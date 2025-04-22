@@ -5,8 +5,13 @@ const PokemonDetail = dynamic(() => import('./PokemonDetail'), {
   loading: () => <div className="flex justify-center items-center min-h-screen">加載中...</div>
 });
 
-export default async function PokemonPage({ params }: { params: { id: string } }) {
-  const {id} = await params;
+interface PageProps {
+  params: Promise<{ id: string }>;
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+}
+
+export default async function PokemonPage({ params }: PageProps) {
+  const { id } = await params;
 
   return (
     <div>
