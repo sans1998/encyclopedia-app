@@ -1,15 +1,15 @@
 import { Pokemon, PokemonListResponse } from '../types';
 import { createApiClient } from './httpClient';
+import { ITEMS_PER_PAGE } from '../utils/constants';
 
 // 從環境變量獲取基礎URL
 const POKEMON_API_URL = process.env.NEXT_PUBLIC_POKEMON_API_URL || 'https://pokeapi.co/api/v2';
-const DEFAULT_PAGE_SIZE = Number(process.env.NEXT_PUBLIC_DEFAULT_PAGE_SIZE) || 20;
 
 // 創建 Pokemon API 客戶端
 const pokemonClient = createApiClient(POKEMON_API_URL);
 
 // 獲取寶可夢列表
-export async function getPokemonList(offset = 0, limit = DEFAULT_PAGE_SIZE): Promise<PokemonListResponse> {
+export async function getPokemonList(offset = 0, limit = ITEMS_PER_PAGE): Promise<PokemonListResponse> {
   const response = await pokemonClient.get<PokemonListResponse>(
     `/pokemon?offset=${offset}&limit=${limit}`
   );
