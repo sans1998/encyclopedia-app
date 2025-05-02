@@ -8,3 +8,4 @@ export interface ApiResponse<T> {
 
 export * from './pokemon';
 export * from './digimon';
+export * from './http';

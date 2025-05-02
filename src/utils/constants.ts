@@ -1,4 +1,5 @@
 // 顏色常數定義
+import { HttpStatusCode } from '@/types';
 
 // 寶可夢類型顏色映射
 export const pokemonTypeColorMap: Record<string, string> = {
@@ -69,3 +70,21 @@ export const encyclopediaPathMap: Record<string, string> = {
 
 // 每頁顯示數量
 export const ITEMS_PER_PAGE = 20; 
+
+// HTTP 狀態碼錯誤訊息
+export const HttpStatusMessages: Record<number, string> = {
+  [HttpStatusCode.BAD_REQUEST]: '請求格式不正確',
+  [HttpStatusCode.UNAUTHORIZED]: '需要身份驗證',
+  [HttpStatusCode.FORBIDDEN]: '沒有存取權限',
+  [HttpStatusCode.NOT_FOUND]: '找不到請求的資源',
+  [HttpStatusCode.METHOD_NOT_ALLOWED]: '請求方法不被允許',
+  [HttpStatusCode.REQUEST_TIMEOUT]: '請求超時',
+  [HttpStatusCode.CONFLICT]: '資源衝突',
+  [HttpStatusCode.UNPROCESSABLE_ENTITY]: '請求格式正確但語義錯誤',
+  [HttpStatusCode.TOO_MANY_REQUESTS]: '請求過於頻繁',
+  [HttpStatusCode.INTERNAL_SERVER_ERROR]: '伺服器內部錯誤',
+  [HttpStatusCode.BAD_GATEWAY]: '網關錯誤',
+  [HttpStatusCode.SERVICE_UNAVAILABLE]: '服務暫時不可用',
+  [HttpStatusCode.GATEWAY_TIMEOUT]: '網關超時',
+  [HttpStatusCode.NETWORK_ERROR]: '網路連接錯誤'
+}; 

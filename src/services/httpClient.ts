@@ -1,4 +1,12 @@
-import { ApiResponse } from '../types';
+import { ApiResponse, HttpStatusCode, HttpMethod, ContentType } from '@/types';
+import { HttpStatusMessages } from '@/utils/constants';
+
+/**
+ * 取得對應 HTTP 狀態碼的錯誤信息
+ */
+function getErrorMessageForStatus(status: number): string {
+  return HttpStatusMessages[status] || `API 請求失敗: ${status}`;
+}
 
 /**
  * 通用的 HTTP 客戶端工具，用於處理 API 請求
@@ -9,19 +17,41 @@ import { ApiResponse } from '../types';
 export async function fetchApi<T>(url: string, options?: RequestInit): Promise<ApiResponse<T>> {
   try {
     const response = await fetch(url, options);
-    
-    return {
-      ok: response.ok,
-      status: response.status,
-      data: response.ok ? await response.json() : undefined,
-      error: !response.ok ? `API 請求失敗: ${response.status}` : undefined
-    };
-  } catch (error) {
+    const status = response.status;
+    const ok = response.ok;
+
+    let data: T | undefined = undefined;
+    let error: string | undefined = undefined;
+
+    if (ok) {
+      data = await tryParseJson<T>(response);
+      if (data === undefined) {
+        error = '響應解析失敗';
+      }
+    } else {
+      error = getErrorMessageForStatus(status);
+    }
+
+    return { ok, status, data, error };
+  } catch (err) {
     return {
       ok: false,
-      status: 500,
-      error: error instanceof Error ? error.message : '未知錯誤'
+      status: HttpStatusCode.NETWORK_ERROR,
+      error: err instanceof Error ? `網路錯誤: ${err.message}` : '網路連接失敗'
     };
+  }
+}
+
+/**
+ * 嘗試解析 JSON 響應
+ * @param response - fetch API 響應對象
+ * @returns 解析後的 JSON 數據或 undefined
+ */
+export async function tryParseJson<T>(response: Response): Promise<T | undefined> {
+  try {
+    return await response.json();
+  } catch {
+    return undefined;
   }
 }
 
@@ -45,7 +75,7 @@ export function createApiClient(baseUrl: string) {
      */
     get: async <T>(endpoint: string, options?: RequestInit): Promise<ApiResponse<T>> => {
       const url = `${baseUrl}${endpoint}`;
-      return fetchApi<T>(url, { ...options, method: 'GET' });
+      return fetchApi<T>(url, { ...options, method: HttpMethod.GET });
     },
     
     /**
@@ -59,9 +89,9 @@ export function createApiClient(baseUrl: string) {
       const url = `${baseUrl}${endpoint}`;
       return fetchApi<T>(url, {
         ...options,
-        method: 'POST',
+        method: HttpMethod.POST,
         headers: {
-          'Content-Type': 'application/json',
+          'Content-Type': ContentType.JSON,
           ...options?.headers,
         },
         body: data ? JSON.stringify(data) : undefined,
@@ -79,9 +109,9 @@ export function createApiClient(baseUrl: string) {
       const url = `${baseUrl}${endpoint}`;
       return fetchApi<T>(url, {
         ...options,
-        method: 'PUT',
+        method: HttpMethod.PUT,
         headers: {
-          'Content-Type': 'application/json',
+          'Content-Type': ContentType.JSON,
           ...options?.headers,
         },
         body: data ? JSON.stringify(data) : undefined,
@@ -96,7 +126,7 @@ export function createApiClient(baseUrl: string) {
      */
     delete: async <T>(endpoint: string, options?: RequestInit): Promise<ApiResponse<T>> => {
       const url = `${baseUrl}${endpoint}`;
-      return fetchApi<T>(url, { ...options, method: 'DELETE' });
+      return fetchApi<T>(url, { ...options, method: HttpMethod.DELETE });
     },
   };
 } 
