@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
-import DetailView from '../DetailView';
+import DetailView from '@/components/DetailView';
 
 // 定義 Image 屬性類型
 interface ImageProps {

@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
-import CreatureCard from '../CreatureCard';
+import CreatureCard from '@/components/CreatureCard';
 import '@testing-library/jest-dom';
 import { Pokemon, Digimon, DigimonType, DigimonLevel } from '@/types';
 
