@@ -1,3 +1,5 @@
+'use client';
+
 import Image from 'next/image';
 import { cn } from '../utils/classNames';
 import { pokemonTypeColorMap, digimonTypeColorMap, digimonLevelColorMap } from '../utils/constants';

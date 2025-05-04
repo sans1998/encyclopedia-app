@@ -1,11 +1,15 @@
+'use client';
+
 import React from 'react';
+import { useRouter } from 'next/navigation';
 import { cn } from '../utils/classNames';
 
 interface PaginationProps {
   className?: string;
   currentPage: number;
   totalPages: number;
-  onPageChange: (page: number) => void;
+  onPageChange?: (page: number) => void;
+  baseUrl?: string;
   disabled?: boolean;
 }
 
@@ -14,8 +18,29 @@ const Pagination: React.FC<PaginationProps> = ({
   currentPage,
   totalPages,
   onPageChange,
+  baseUrl,
   disabled = false,
 }) => {
+  const router = useRouter();
+
+  // 如果只有一頁，則不顯示分頁
+  if (totalPages <= 1) {
+    return null;
+  }
+
+  // 處理頁面變更
+  const handlePageChange = (page: number) => {
+    if (disabled) return;
+    
+    if (baseUrl) {
+      // 如果提供了 baseUrl，使用路由導航
+      router.push(`${baseUrl}?page=${page}`);
+    } else if (onPageChange) {
+      // 否則使用回調函數
+      onPageChange(page);
+    }
+  };
+
   // 計算要顯示的頁碼範圍
   const getPageNumbers = () => {
     // 始終顯示當前頁碼和其前後兩頁
@@ -68,8 +93,9 @@ const Pagination: React.FC<PaginationProps> = ({
     <div className={cn('flex items-center justify-center space-x-2 mt-12 mb-16', className)}>
       {/* 上一頁按鈕 */}
       <button
+        aria-label="上一頁"
         className={navButtonClass}
-        onClick={() => onPageChange(currentPage - 1)}
+        onClick={() => handlePageChange(currentPage - 1)}
         disabled={currentPage <= 1 || disabled}
       >
         {"<"}
@@ -80,7 +106,7 @@ const Pagination: React.FC<PaginationProps> = ({
         <>
           <button
             className={pageButtonClass(1)}
-            onClick={() => onPageChange(1)}
+            onClick={() => handlePageChange(1)}
             disabled={disabled}
           >
             1
@@ -94,7 +120,7 @@ const Pagination: React.FC<PaginationProps> = ({
         <button
           key={page}
           className={pageButtonClass(page)}
-          onClick={() => onPageChange(page)}
+          onClick={() => handlePageChange(page)}
           disabled={disabled}
         >
           {page}
@@ -109,7 +135,7 @@ const Pagination: React.FC<PaginationProps> = ({
           )}
           <button
             className={pageButtonClass(totalPages)}
-            onClick={() => onPageChange(totalPages)}
+            onClick={() => handlePageChange(totalPages)}
             disabled={disabled}
           >
             {totalPages}
@@ -119,8 +145,9 @@ const Pagination: React.FC<PaginationProps> = ({
 
       {/* 下一頁按鈕 */}
       <button
+        aria-label="下一頁"
         className={navButtonClass}
-        onClick={() => onPageChange(currentPage + 1)}
+        onClick={() => handlePageChange(currentPage + 1)}
         disabled={currentPage >= totalPages || disabled}
       >
         {">"}

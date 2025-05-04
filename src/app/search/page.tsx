@@ -23,9 +23,10 @@ interface SearchResult {
 function SearchResults() {
   const searchParams = useSearchParams();
   const query = searchParams.get('q') || '';
+  const pageParam = searchParams.get('page');
+  const currentPage = pageParam ? parseInt(pageParam) : 1;
   const [results, setResults] = useState<SearchResult[]>([]);
   const [loading, setLoading] = useState(false);
-  const [currentPage, setCurrentPage] = useState(1);
   const resultsPerPage = 12;
 
   useEffect(() => {
@@ -177,7 +178,7 @@ function SearchResults() {
                   <Pagination
                     currentPage={currentPage}
                     totalPages={Math.ceil(results.length / resultsPerPage)}
-                    onPageChange={setCurrentPage}
+                    baseUrl={`/search?q=${encodeURIComponent(query)}`}
                   />
                 </div>
               )}
