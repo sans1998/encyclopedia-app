@@ -3,32 +3,16 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
-import Header from '@/components/Header';
-import Loading from '@/components/Loading';
+import { Loading } from '@/components';
+import Header from '@/components/navigation/Header';
 import { getPokemonDetail } from '@/services/pokemonService';
 import { Pokemon } from '@/types';
-
-// 類型顏色映射
-const typeColorMap: Record<string, { bg: string; border: string; text: string }> = {
-  normal: { bg: 'bg-gray-300', border: 'border-gray-400', text: 'text-gray-800' },
-  fire: { bg: 'bg-red-400', border: 'border-red-500', text: 'text-white' },
-  water: { bg: 'bg-blue-400', border: 'border-blue-500', text: 'text-white' },
-  electric: { bg: 'bg-yellow-300', border: 'border-yellow-400', text: 'text-gray-800' },
-  grass: { bg: 'bg-green-400', border: 'border-green-500', text: 'text-white' },
-  ice: { bg: 'bg-blue-200', border: 'border-blue-300', text: 'text-blue-800' },
-  fighting: { bg: 'bg-red-600', border: 'border-red-700', text: 'text-white' },
-  poison: { bg: 'bg-purple-400', border: 'border-purple-500', text: 'text-white' },
-  ground: { bg: 'bg-yellow-600', border: 'border-yellow-700', text: 'text-white' },
-  flying: { bg: 'bg-indigo-300', border: 'border-indigo-400', text: 'text-indigo-900' },
-  psychic: { bg: 'bg-pink-400', border: 'border-pink-500', text: 'text-white' },
-  bug: { bg: 'bg-green-400', border: 'border-green-500', text: 'text-white' },
-  rock: { bg: 'bg-yellow-700', border: 'border-yellow-800', text: 'text-white' },
-  ghost: { bg: 'bg-purple-600', border: 'border-purple-700', text: 'text-white' },
-  dragon: { bg: 'bg-indigo-600', border: 'border-indigo-700', text: 'text-white' },
-  dark: { bg: 'bg-gray-700', border: 'border-gray-800', text: 'text-white' },
-  steel: { bg: 'bg-gray-400', border: 'border-gray-500', text: 'text-white' },
-  fairy: { bg: 'bg-pink-300', border: 'border-pink-400', text: 'text-pink-900' }
-};
+import {
+  pokemonTypeDetailColorMap,
+  errorMessages,
+  cssClasses,
+  pokemonStatNameMap
+} from '@/utils/constants';
 
 // 定義組件 Props 類型
 interface PokemonDetailProps {
@@ -50,7 +34,7 @@ export default function PokemonDetail({ id }: PokemonDetailProps) {
         setPokemon(data);
       } catch (err) {
         console.error('獲取寶可夢詳情時出錯:', err);
-        setError('無法加載寶可夢詳情。請稍後再試。');
+        setError(errorMessages.POKEMON_DETAIL_ERROR);
       } finally {
         setLoading(false);
       }
@@ -71,16 +55,7 @@ export default function PokemonDetail({ id }: PokemonDetailProps) {
   
   // 格式化寶可夢屬性
   const formatStat = (statName: string) => {
-    const statMap: Record<string, string> = {
-      'hp': 'HP',
-      'attack': '攻擊',
-      'defense': '防禦',
-      'special-attack': '特攻',
-      'special-defense': '特防',
-      'speed': '速度'
-    };
-    
-    return statMap[statName] || statName;
+    return pokemonStatNameMap[statName] || statName;
   };
   
   return (
@@ -91,11 +66,11 @@ export default function PokemonDetail({ id }: PokemonDetailProps) {
         {loading ? (
           <Loading />
         ) : error ? (
-          <div className="text-center text-red-500 p-8 bg-red-50 rounded-lg">
+          <div className={cssClasses.errorBox}>
             <p>{error}</p>
             <button 
               onClick={goBack} 
-              className="mt-4 px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
+              className={cssClasses.detailReturnButton}
             >
               返回
             </button>
@@ -104,7 +79,7 @@ export default function PokemonDetail({ id }: PokemonDetailProps) {
           <div>
             <button 
               onClick={goBack}
-              className="mb-6 flex items-center text-blue-600 hover:text-blue-800"
+              className={cssClasses.backButton}
             >
               <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-1" viewBox="0 0 20 20" fill="currentColor">
                 <path fillRule="evenodd" d="M9.707 14.707a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 1.414L7.414 9H15a1 1 0 110 2H7.414l2.293 2.293a1 1 0 010 1.414z" clipRule="evenodd" />
@@ -126,8 +101,8 @@ export default function PokemonDetail({ id }: PokemonDetailProps) {
                           priority
                         />
                       ) : (
-                        <div className="w-full h-full flex items-center justify-center bg-gray-200 rounded-md">
-                          <span className="text-gray-500">無圖片</span>
+                        <div className={cssClasses.noImageContainer}>
+                          <span className={cssClasses.noImageText}>無圖片</span>
                         </div>
                       )}
                     </div>
@@ -146,7 +121,7 @@ export default function PokemonDetail({ id }: PokemonDetailProps) {
                     <div className="mb-6 flex flex-wrap gap-2">
                       {pokemon.types.map((typeInfo, index) => {
                         const type = typeInfo.type.name;
-                        const colors = typeColorMap[type] || { 
+                        const colors = pokemonTypeDetailColorMap[type] || { 
                           bg: 'bg-gray-300', 
                           border: 'border-gray-400', 
                           text: 'text-gray-800' 
@@ -155,7 +130,7 @@ export default function PokemonDetail({ id }: PokemonDetailProps) {
                         return (
                           <span 
                             key={index}
-                            className={`type-badge ${colors.bg} ${colors.border} ${colors.text} border`}
+                            className={`${cssClasses.typeBadgeDetail} ${colors.bg} ${colors.border} ${colors.text} border`}
                           >
                             {type}
                           </span>
@@ -210,10 +185,10 @@ export default function PokemonDetail({ id }: PokemonDetailProps) {
           </div>
         ) : (
           <div className="text-center p-8">
-            <p className="text-gray-800">未找到寶可夢資料</p>
+            <p className="text-gray-800">{errorMessages.NO_POKEMON_FOUND}</p>
             <button 
               onClick={goBack} 
-              className="mt-4 px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
+              className={cssClasses.detailReturnButton}
             >
               返回列表
             </button>

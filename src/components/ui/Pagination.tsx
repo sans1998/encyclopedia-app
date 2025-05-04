@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { useRouter } from 'next/navigation';
-import { cn } from '../utils/classNames';
+import { cn } from '@/utils/classNames';
 
 interface PaginationProps {
   className?: string;
