@@ -1,7 +1,7 @@
 import {DigimonDetail} from '@/components';
 
 export default async function DigimonPage({ params }: { params: Promise<{ id: string }> }) {
-  const resolvedParams = await params;
+  const { id } = await params;
   
-  return <DigimonDetail id={resolvedParams.id} />;
+  return <DigimonDetail id={id} />;
 } 
