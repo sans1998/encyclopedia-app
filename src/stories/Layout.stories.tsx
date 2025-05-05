@@ -1,11 +1,11 @@
 import React from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
-import Layout from '../layouts';
-import Container from '../components/Container';
+import {MainLayout} from '@/layouts';
+import {Container} from '@/components';
 
-const meta: Meta<typeof Layout> = {
+const meta: Meta<typeof MainLayout> = {
   title: 'Layout/Layout',
-  component: Layout,
+  component: MainLayout,
   parameters: {
     layout: 'fullscreen',
   },
@@ -13,7 +13,7 @@ const meta: Meta<typeof Layout> = {
 };
 
 export default meta;
-type Story = StoryObj<typeof Layout>;
+type Story = StoryObj<typeof MainLayout>;
 
 export const Default: Story = {
   args: {

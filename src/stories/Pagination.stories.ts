@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { fn } from '@storybook/test';
-import Pagination from '../components/Pagination';
+import {Pagination} from '@/components';
 
 const meta = {
   title: 'App/Pagination',
