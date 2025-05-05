@@ -7,14 +7,10 @@ import { errorMessages, cssClasses, encyclopediaPathMap, encyclopediaTypes } fro
 // 從 API 獲取寶可夢數據
 async function getPokemonPageData(page: number) {
   try {
-    // 修復 URL 解析問題，使用絕對 URL
-    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 
-                   (typeof window !== 'undefined' ? window.location.origin : 'http://localhost:3000');
+    // 直接使用環境變數獲取基礎URL
+    const baseUrl = process.env.NEXT_PUBLIC_API_URL || '';
     
-    const res = await fetch(`${baseUrl}/api/pokemon/page?page=${page}`, {
-      // 不緩存數據，確保每次都是最新的
-      cache: 'no-store'
-    });
+    const res = await fetch(`${baseUrl}/api/pokemon/page?page=${page}`);
     
     if (!res.ok) {
       throw new Error(errorMessages.LOAD_POKEMON_FAILED);
