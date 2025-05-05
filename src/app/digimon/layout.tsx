@@ -1,4 +1,4 @@
-import { MainLayout } from '@/components/layout';
+import { MainLayout } from '@/layouts';
 
 export default function DigimonLayout({
   children,

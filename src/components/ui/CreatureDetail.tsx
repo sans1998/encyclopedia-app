@@ -1,6 +1,6 @@
 import React from 'react';
 import { cn } from '@/utils/classNames';
-import Card from '@/components/ui/Card';
+import {Card} from '@/components';
 import Image from 'next/image';
 
 interface Stat {

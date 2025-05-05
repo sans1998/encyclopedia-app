@@ -1,7 +1,6 @@
 import { Suspense } from 'react';
 import Link from 'next/link';
-import Loading from '@/components/ui/Loading';
-import DigimonList from '@/components/feature/DigimonList';
+import { DigimonList, Loading } from '@/components';
 import { errorMessages, cssClasses, encyclopediaPathMap, encyclopediaTypes } from '@/utils/constants';
 
 // 從 API 獲取數碼寶貝數據
@@ -48,7 +47,8 @@ export default async function DigimonPage({
 }: {
   searchParams: { page?: string }
 }) {
-  const currentPage = parseInt(await searchParams?.page || '1') ;
+  const {page = '1'} = await searchParams;
+  const currentPage = parseInt(page) ;
   
   try {
     // 獲取數碼寶貝數據

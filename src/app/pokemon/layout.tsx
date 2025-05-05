@@ -1,4 +1,4 @@
-import { MainLayout } from '@/components';
+import { MainLayout } from '@/layouts';
 
 export default function PokemonLayout({
   children,

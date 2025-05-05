@@ -1,21 +1,22 @@
 import React from 'react';
 import { cn } from '@/utils/classNames';
-import Header from '@/components/navigation/Header';
-import Footer from '@/components/navigation/Footer';
+import Header from '@/components/layouts/Header';
+import Footer from '@/components/layouts/Footer';
 
-interface LayoutProps {
+interface MainLayoutProps {
   children: React.ReactNode;
   className?: string;
-  bgGradient?: string;
+  bgGradient?: string; // 背景漸變顏色
   hideHeader?: boolean;
   hideFooter?: boolean;
 }
 
 /**
- * 通用布局組件
+ * 主佈局組件
+ * 包含頁首、內容區和頁尾
  * 支援自定義背景、隱藏頁首頁尾等功能
  */
-const Layout: React.FC<LayoutProps> = ({
+const MainLayout: React.FC<MainLayoutProps> = ({
   children,
   className,
   bgGradient,
@@ -39,4 +40,4 @@ const Layout: React.FC<LayoutProps> = ({
   );
 };
 
-export default Layout; 
+export default MainLayout; 

@@ -3,26 +3,24 @@
 import { useState } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import Link from 'next/link';
-import Pagination from '@/components/ui/Pagination';
-import Loading from '@/components/ui/Loading';
-import { Pokemon } from '@/types/pokemon';
+// 用絕對路徑引用UI組件
+import {Pagination,Loading} from '@/components';
+import { Digimon } from '@/types/digimon';
 import { 
-  pokemonTypeGradients, 
+  digimonLevelGradients, 
   cssClasses,
   gridConfig
 } from '@/utils/constants';
 
-// 根據寶可夢類型獲取背景顏色
-function getTypeBackgroundColor(types: string[]) {
-  if (!types || types.length === 0) return '';
-  
-  const primaryType = types[0].toLowerCase();
-  return pokemonTypeGradients[primaryType] || '';
+// 根據數碼寶貝等級獲取背景顏色
+function getLevelBackgroundColor(level: string) {
+  if (!level) return '';
+  return digimonLevelGradients[level.toLowerCase()] || 'from-gray-100 to-gray-200';
 }
 
-interface PokemonListProps {
+interface DigimonListProps {
   initialData: {
-    pokemonList: Pokemon[];
+    digimonList: Digimon[];
     totalPages: number;
     currentPage: number;
     totalItems: number;
@@ -30,7 +28,7 @@ interface PokemonListProps {
   initialPage: number;
 }
 
-export default function PokemonList({ initialData, initialPage }: PokemonListProps) {
+export default function DigimonList({ initialData, initialPage }: DigimonListProps) {
   // 使用初始數據初始化狀態
   const [data, setData] = useState(initialData);
   const [loading, setLoading] = useState(false);
@@ -47,7 +45,7 @@ export default function PokemonList({ initialData, initialPage }: PokemonListPro
     
     try {
       // 客戶端獲取新頁面數據
-      const response = await fetch(`/api/pokemon/page?page=${page}`);
+      const response = await fetch(`/api/digimon/page?page=${page}`);
       if (!response.ok) {
         throw new Error('Failed to fetch data');
       }
@@ -71,37 +69,31 @@ export default function PokemonList({ initialData, initialPage }: PokemonListPro
       )}
       
       <div className={gridConfig.default}>
-        {data.pokemonList.map((pokemon: Pokemon) => {
-          // 獲取寶可夢類型
-          const types = pokemon.types.map((t: { type: { name: string } }) => t.type.name);
-          const typeBackground = getTypeBackgroundColor(types);
+        {data.digimonList.map((digimon: Digimon) => {
+          // 獲取第一個等級（如果有的話）
+          const levelObj = digimon.levels && digimon.levels.length > 0 ? digimon.levels[0] : null;
+          const levelName = levelObj ? levelObj.level : '未知';
+          const levelBackground = getLevelBackgroundColor(levelName);
           
-          // 獲取圖片URL
-          const imageUrl = pokemon.sprites.front_default || '';
+          // 獲取第一個圖片URL（之後會在 CreatureCard 中使用）
+          // const imageUrl = digimon.images && digimon.images.length > 0 ? digimon.images[0].href : '';
           
           return (
             <Link 
-              key={pokemon.id} 
-              href={`/pokemon/${pokemon.id}`}
+              key={digimon.id} 
+              href={`/digimon/${digimon.id}`}
               className={cssClasses.cardHover}
             >
+              {/* 暫時注釋掉 CreatureCard，等待組件重建 */}
               <div 
-                className={`rounded-lg p-4 shadow-md bg-gradient-to-br ${typeBackground}`}
+                className={`rounded-lg p-4 shadow-md bg-gradient-to-br ${levelBackground}`}
               >
                 <div className="text-center">
-                  {imageUrl && <img src={imageUrl} alt={pokemon.name} className="mx-auto w-24 h-24" />}
-                  <p className="font-semibold">{pokemon.name}</p>
-                  <p className="text-sm text-gray-600">ID: {pokemon.id}</p>
-                  <div className="flex flex-wrap justify-center gap-1 mt-1">
-                    {types.map(type => (
-                      <span 
-                        key={type}
-                        className={cssClasses.typeBadge}
-                      >
-                        {type}
-                      </span>
-                    ))}
-                  </div>
+                  <p className="font-semibold">{digimon.name}</p>
+                  <p className="text-sm text-gray-600">ID: {digimon.id}</p>
+                  <p className={cssClasses.levelBadge}>
+                    {levelName}
+                  </p>
                 </div>
               </div>
             </Link>

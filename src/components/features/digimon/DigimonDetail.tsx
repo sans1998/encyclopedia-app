@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
-import Loading from '@/components/ui/Loading';
+import { Loading } from '@/components';
 import { getDigimonDetail } from '@/services/digimonService';
 import { Digimon } from '@/types';
 import {
