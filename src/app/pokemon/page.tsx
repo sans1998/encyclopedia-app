@@ -48,7 +48,7 @@ export default async function PokemonPage({
 }: {
   searchParams: { page?: string }
 }) {
-  const currentPage = searchParams.page ? parseInt(searchParams.page) : 1;
+  const currentPage = parseInt(await searchParams?.page || '1') ;
   
   try {
     // 獲取寶可夢數據

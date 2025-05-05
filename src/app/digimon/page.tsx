@@ -48,7 +48,7 @@ export default async function DigimonPage({
 }: {
   searchParams: { page?: string }
 }) {
-  const currentPage = searchParams.page ? parseInt(searchParams.page) : 1;
+  const currentPage = parseInt(await searchParams?.page || '1') ;
   
   try {
     // 獲取數碼寶貝數據

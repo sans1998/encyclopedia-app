@@ -4,7 +4,6 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { Loading } from '@/components';
-import Header from '@/components/navigation/Header';
 import { getPokemonDetail } from '@/services/pokemonService';
 import { Pokemon } from '@/types';
 import {
@@ -59,9 +58,6 @@ export default function PokemonDetail({ id }: PokemonDetailProps) {
   };
   
   return (
-    <div className="min-h-screen bg-gradient-to-b from-yellow-50 to-yellow-100">
-      <Header />
-      
       <main className="container mx-auto px-4 py-8">
         {loading ? (
           <Loading />
@@ -195,6 +191,5 @@ export default function PokemonDetail({ id }: PokemonDetailProps) {
           </div>
         )}
       </main>
-    </div>
   );
 } 

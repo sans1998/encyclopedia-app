@@ -3,7 +3,6 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
-import Header from '@/components/navigation/Header';
 import Loading from '@/components/ui/Loading';
 import { getDigimonDetail } from '@/services/digimonService';
 import { Digimon } from '@/types';
@@ -52,9 +51,6 @@ export default function DigimonDetail({ id }: DigimonDetailProps) {
   };
   
   return (
-    <div className="min-h-screen bg-gradient-to-b from-blue-50 to-blue-100">
-      <Header />
-      
       <main className="container mx-auto px-4 py-8">
         {loading ? (
           <Loading />
@@ -196,6 +192,5 @@ export default function DigimonDetail({ id }: DigimonDetailProps) {
           </div>
         )}
       </main>
-    </div>
   );
 } 
