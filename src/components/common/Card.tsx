@@ -16,7 +16,7 @@ export const Card: React.FC<CardProps> = ({
   onClick,
   hoverable = false,
 }) => {
-  const baseClasses = 'rounded-lg overflow-hidden';
+  const baseClasses = 'rounded-lg overflow-hidden h-60';
   const variantClasses = {
     default: 'bg-white',
     elevated: 'bg-white shadow-md',
@@ -56,7 +56,7 @@ export const CardContent: React.FC<{ children: React.ReactNode; className?: stri
   children,
   className,
 }) => (
-  <div className={cn('px-6 py-4', className)}>
+  <div className={cn('px-6 py-4 h-full flex flex-col', className)}>
     {children}
   </div>
 );

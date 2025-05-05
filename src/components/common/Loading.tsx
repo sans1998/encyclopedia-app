@@ -40,7 +40,7 @@ const Loading: React.FC<LoadingProps> = ({
 
   if (fullPage) {
     return (
-      <div className="fixed inset-0 flex flex-col items-center justify-center bg-white bg-opacity-80 z-50">
+      <div className="fixed inset-0 flex flex-col items-center justify-center  bg-opacity-80 z-50">
         {spinner}
         {text && <p className="mt-4 text-gray-600">{text}</p>}
       </div>
