@@ -21,9 +21,22 @@ export async function GET(request: NextRequest) {
     // 獲取增強的數碼寶貝列表，服務層已經處理了詳情獲取
     const enhancedResponse = await getEnhancedDigimonList(currentPage - 1, ITEMS_PER_PAGE);
     
+    // 增強返回的數據，確保包含type、attribute和image信息
+    const enhancedDigimonList = enhancedResponse.content.map(digimon => ({
+      ...digimon,
+      // 確保數碼寶貝類型信息存在
+      type: digimon.primaryType || '未知類型',
+      // 確保數碼寶貝屬性信息存在
+      attribute: digimon.primaryAttribute || '未知屬性',
+      // 確保level字段存在
+      level: digimon.primaryLevel || '普通',
+      // 確保image字段存在
+      image: digimon.image || ''
+    }));
+    
     // 返回完整數據
     const response: DigimonPageResponse = {
-      digimonList: enhancedResponse.content,
+      digimonList: enhancedDigimonList,
       totalPages: enhancedResponse.pageable.totalPages,
       currentPage,
       totalItems: enhancedResponse.pageable.totalElements

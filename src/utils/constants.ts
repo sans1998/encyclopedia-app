@@ -54,6 +54,45 @@ export const digimonAttributeDetailColorMap: Record<string, { bg: string; border
   unknown: { bg: 'bg-gray-400', border: 'border-gray-500', text: 'text-white' }
 };
 
+// 數碼寶貝類型詳細顏色映射 (用於詳情頁)
+export const digimonTypeDetailColorMap: Record<string, { bg: string; border: string; text: string }> = {
+  'beast': { bg: 'bg-amber-500', border: 'border-amber-600', text: 'text-white' },
+  'bird': { bg: 'bg-sky-500', border: 'border-sky-600', text: 'text-white' },
+  'machine': { bg: 'bg-slate-500', border: 'border-slate-600', text: 'text-white' },
+  'mammal': { bg: 'bg-orange-500', border: 'border-orange-600', text: 'text-white' },
+  'reptile': { bg: 'bg-lime-500', border: 'border-lime-600', text: 'text-white' },
+  'dragon': { bg: 'bg-red-500', border: 'border-red-600', text: 'text-white' },
+  'fish': { bg: 'bg-cyan-500', border: 'border-cyan-600', text: 'text-white' },
+  'holy beast': { bg: 'bg-yellow-500', border: 'border-yellow-600', text: 'text-white' },
+  'holy-beast': { bg: 'bg-yellow-500', border: 'border-yellow-600', text: 'text-white' },
+  'insect': { bg: 'bg-green-500', border: 'border-green-600', text: 'text-white' },
+  'unknown': { bg: 'bg-gray-500', border: 'border-gray-600', text: 'text-white' },
+};
+
+// 數碼寶貝等級詳細顏色映射 (用於詳情頁)
+export const digimonLevelDetailColorMap: Record<string, { bg: string; border: string; text: string }> = {
+  'rookie': { bg: 'bg-gray-200', border: 'border-gray-300', text: 'text-gray-800' },
+  'champion': { bg: 'bg-gray-200', border: 'border-gray-300', text: 'text-gray-800' },
+  'ultimate': { bg: 'bg-gray-200', border: 'border-gray-300', text: 'text-gray-800' },
+  'mega': { bg: 'bg-gray-200', border: 'border-gray-300', text: 'text-gray-800' },
+  'armor': { bg: 'bg-gray-200', border: 'border-gray-300', text: 'text-gray-800' },
+  'training': { bg: 'bg-gray-200', border: 'border-gray-300', text: 'text-gray-800' },
+  'fresh': { bg: 'bg-gray-200', border: 'border-gray-300', text: 'text-gray-800' },
+  'in-training': { bg: 'bg-gray-200', border: 'border-gray-300', text: 'text-gray-800' },
+  'hybrid': { bg: 'bg-gray-200', border: 'border-gray-300', text: 'text-gray-800' },
+  'unknown': { bg: 'bg-gray-200', border: 'border-gray-300', text: 'text-gray-800' },
+};
+
+// 數碼寶貝屬域詳細顏色映射 (用於詳情頁)
+export const digimonFieldDetailColorMap: Record<string, { bg: string; border: string; text: string }> = {
+  'adventure': { bg: 'bg-indigo-100', border: 'border-indigo-200', text: 'text-indigo-800' },
+  'deep savers': { bg: 'bg-indigo-100', border: 'border-indigo-200', text: 'text-indigo-800' },
+  'nature spirits': { bg: 'bg-indigo-100', border: 'border-indigo-200', text: 'text-indigo-800' },
+  'virus busters': { bg: 'bg-indigo-100', border: 'border-indigo-200', text: 'text-indigo-800' },
+  'metal empire': { bg: 'bg-indigo-100', border: 'border-indigo-200', text: 'text-indigo-800' },
+  'unknown': { bg: 'bg-indigo-100', border: 'border-indigo-200', text: 'text-indigo-800' },
+};
+
 // 數碼寶貝等級背景漸層顏色
 export const digimonLevelGradients: Record<string, string> = {
   rookie: 'from-green-200 to-green-300',
@@ -65,6 +104,30 @@ export const digimonLevelGradients: Record<string, string> = {
   fresh: 'from-pink-100 to-pink-200',
   'in-training': 'from-teal-100 to-teal-200',
   hybrid: 'from-indigo-200 to-indigo-300'
+};
+
+// 數碼寶貝類型背景漸層顏色
+export const digimonTypeGradients: Record<string, string> = {
+  'beast': 'from-amber-200 to-amber-300',
+  'bird': 'from-sky-200 to-sky-300',
+  'machine': 'from-slate-200 to-slate-300',
+  'mammal': 'from-orange-200 to-orange-300',
+  'reptile': 'from-lime-200 to-lime-300',
+  'dragon': 'from-red-200 to-red-300',
+  'fish': 'from-cyan-200 to-cyan-300',
+  'holy beast': 'from-yellow-100 to-yellow-200',
+  'holy-beast': 'from-yellow-100 to-yellow-200',
+  'insect': 'from-green-200 to-green-300',
+  'unknown': 'from-gray-200 to-gray-300'
+};
+
+// 數碼寶貝屬性背景漸層顏色
+export const digimonAttributeGradients: Record<string, string> = {
+  'vaccine': 'from-blue-200 to-blue-300',
+  'virus': 'from-purple-200 to-purple-300',
+  'data': 'from-green-200 to-green-300',
+  'free': 'from-yellow-200 to-yellow-300',
+  'unknown': 'from-gray-200 to-gray-300'
 };
 
 // 百科全書類型及路徑
