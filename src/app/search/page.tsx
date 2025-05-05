@@ -3,11 +3,11 @@
 import React, { useEffect, useState, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
-import Header from '@/components/Header';
-import CreatureCard from '@/components/CreatureCard';
-import SearchBar from '@/components/SearchBar';
-import Loading from '@/components/Loading';
-import Pagination from '@/components/Pagination';
+import Header from '@/components/layouts/Header';
+import CreatureCard from '@/components/ui/CreatureCard';
+import SearchBar from '@/components/ui/SearchBar';
+import Loading from '@/components/common/Loading';
+import Pagination from '@/components/common/Pagination';
 import { searchPokemon } from '@/services/pokemonService';
 import { searchDigimon } from '@/services/digimonService';
 
@@ -154,20 +154,19 @@ function SearchResults() {
                   const backgroundGradient = getBackgroundColor(item);
                   
                   return (
-                    <Link 
+                    <CreatureCard
                       key={`${item.category}-${item.id}`}
+                      name={item.name}
+                      image={item.image}
+                      tags={item.types.map(type => (
+                        <span key={type} className="inline-block px-2 py-1 text-xs rounded bg-opacity-50 bg-blue-100 text-blue-800 mr-1 mb-1">
+                          {type}
+                        </span>
+                      ))}
+                      id={item.id}
+                      backgroundGradient={backgroundGradient}
                       href={`/${item.category}/${item.id}`}
-                      className="block transform transition hover:scale-105"
-                    >
-                      <CreatureCard
-                        name={item.name}
-                        image={item.image}
-                        types={item.types}
-                        id={item.id}
-                        category={item.category === 'pokemon' ? '寶可夢' : '數碼寶貝'}
-                        className={`bg-gradient-to-br ${backgroundGradient}`}
-                      />
-                    </Link>
+                    />
                   );
                 })}
               </div>
