@@ -45,10 +45,10 @@ function ErrorDisplay({ message }: { message: string }) {
 export default async function DigimonPage({
   searchParams
 }: {
-  searchParams: { page?: string }
+  searchParams: Promise<{ page?: string }>
 }) {
-  const {page = '1'} = await searchParams;
-  const currentPage = parseInt(page) ;
+  const { page = '1' } = await searchParams;
+  const currentPage = parseInt(page);
   
   try {
     // 獲取數碼寶貝數據
