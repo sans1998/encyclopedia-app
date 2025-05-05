@@ -56,6 +56,7 @@ export interface EnhancedDigimonListItem {
   href: string;
   primaryAttribute?: string;
   primaryLevel?: string;
+  primaryType?: string;
 }
 
 // 獲取數碼寶貝列表
@@ -228,7 +229,9 @@ export async function getEnhancedDigimonList(page = 0, pageSize = ITEMS_PER_PAGE
             primaryAttribute: data.attributes && data.attributes.length > 0 ? 
               data.attributes[0].attribute : undefined,
             primaryLevel: data.levels && data.levels.length > 0 ? 
-              data.levels[0].level : undefined
+              data.levels[0].level : undefined,
+            primaryType: data.types && data.types.length > 0 ? 
+              data.types[0].type : undefined
           };
         }
         
@@ -243,7 +246,9 @@ export async function getEnhancedDigimonList(page = 0, pageSize = ITEMS_PER_PAGE
           primaryAttribute: item.attributes && item.attributes.length > 0 ? 
             item.attributes[0].attribute : undefined,
           primaryLevel: item.levels && item.levels.length > 0 ? 
-            item.levels[0].level : undefined
+            item.levels[0].level : undefined,
+          primaryType: item.types && item.types.length > 0 ? 
+            item.types[0].type : undefined
         };
       }
     } catch (error) {
